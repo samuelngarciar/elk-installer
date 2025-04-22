@@ -77,6 +77,8 @@ defina las siguientes 2 variables adicionales con los valores recuperados en los
 #### export API_KEY
 #### export PASSWORD
 
+
+
 Aplicar el manifiesto que esta en este mismo repositorio:
 
 envsubst < agent-full.yaml | kubectl apply -f -
