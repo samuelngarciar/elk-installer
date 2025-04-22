@@ -118,3 +118,13 @@ jobs:
           echo "9- WAIT 183 SECONDS AND CHECK"
           sleep 183
           kubectl get svc | grep lb-kibana
+
+          echo "10- INSTALL KUBE-STATE-METRICS"
+          git clone https://github.com/devopscube/kube-state-metrics-configs.git
+          kubectl apply -f kube-state-metrics-configs/
+
+          echo "11- WAIT 30 SECONDS"
+          sleep 30
+
+          echo "12- CHECK ALL PODS"
+          kubectl get pods --all-namespaces
