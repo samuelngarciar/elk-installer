@@ -74,8 +74,8 @@ Muestra esto, con la cual se debe darle al boton generar CREATE API KEY
 Luego en una shell con acceso al usuario, set o export la variable KUBECONFIG apuntando hacia el cluster k8s en cuestion
 defina las siguientes 2 variables adicionales con los valores recuperados en los pasos previos y en el output del pipeline:
 
-#### export API_KEY
-#### export PASSWORD
+ export API_KEY=THEVALUEGENERATED
+ export PASSWORD=THEVALUEGENERATED
 
 
 
@@ -88,14 +88,22 @@ Verifique que el agent inicio correctamente:
 kubectl get pods -n kube-system
 
 
+### Instalar un monitor de microservicio
+Si requiere monitorear un microservicio particular con el objetivo de validar incluso alertas posteriores de SLO
+debe instalar un agente en el cluster con el mediante el uso de los siguientes pasos
 
+1. Identifique direccion IP externa o interna del microservicio y definina una variable en un ambiente que tenga KUBECONFIG definido como variables y accesible hacia el k8s target
+2. 
+   export IPMICROSERVICE=THEVALUEGENERATED
+   
+3. Defina la variable password de elastic en una variable tambien asi
+4. 
+   export PASSWORD=THEVALUEGENERATED
 
+Aplique los cambios asi:
+envsubst < agent-uptime.yml | kubectl apply -f -
 
-
-
-
-
-
-
+Si todo esta OK puede revisar el uptime en el dashboard del Kibana similar a este:
+![image](https://github.com/user-attachments/assets/531b7304-ecf1-41f7-979a-7099fabca812)
 
 
