@@ -1,0 +1,60 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: elk-heartbeat-config
+  namespace: kube-system
+data:
+  heartbeat.yml: |
+    heartbeat.monitors:
+    - type: http
+      id: service-status
+      name: Service Status Check
+      schedule: '@every 5s'
+      urls: ['http://${IPMICROSERVICE}']
+      check.response.status: [200]
+    
+    output.elasticsearch:
+      hosts: ['https://quickstart-es-http.default.svc.cluster.local:9200']
+      username: 'elastic'
+      password: '${PASSWORD}'
+      ssl.verification_mode: "none"
+    
+    logging.to_files: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-elk-heartbeat
+  namespace: kube-system
+  labels:
+    app: deployment-elk-heartbeat
+spec:
+  selector:
+    matchLabels:
+      app: deployment-elk-heartbeat
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: deployment-elk-heartbeat
+    spec:
+      containers:
+        - name: deployment-elk-heartbeat
+          image: docker.elastic.co/beats/heartbeat:9.0.0
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "150Mi"
+            limits:
+              cpu: "350m"
+              memory: "200Mi"
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: elk-heartbeat-config
+              mountPath: "/usr/share/heartbeat/heartbeat.yml"
+              subPath: "heartbeat.yml"
+      volumes:
+        - name: elk-heartbeat-config
+          configMap:
+            name: elk-heartbeat-config
+      restartPolicy: Always
