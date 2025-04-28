@@ -101,6 +101,7 @@ debe instalar un agente en el cluster con el mediante el uso de los siguientes p
    `export PASSWORD=THEVALUEGENERATED`
 
 Aplique los cambios asi:
+
 `envsubst < agent-uptime.yml | kubectl apply -f -`
 
 Si todo esta OK puede revisar el uptime en el dashboard del Kibana similar a este:
